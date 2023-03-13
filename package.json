@@ -1,0 +1,25 @@
+{
+  "name": "earth-1",
+  "version": "1.0.0",
+  "description": "DC Fandom Social Network",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrjose/earth-1.git"
+  },
+  "keywords": [],
+  "author": "Pedro José Lima",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pedrjose/earth-1/issues"
+  },
+  "homepage": "https://github.com/pedrjose/earth-1#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21"
+  }
+}
