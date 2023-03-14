@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 
-app.get('/', (req, res)=> {
-  res.send('Hello World')
+app.get('/soma', (req, res)=> {
+  const a = `Olá Mundo`;
+
+  res.json(a);
 })
 
-app.listen(3000)
+app.listen(3000);
