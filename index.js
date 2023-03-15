@@ -1,10 +1,11 @@
 const express = require('express')
 const app = express()
 
-app.get('/soma', (req, res)=> {
-  const a = `Olá Mundo`;
+const userRoute = require("./src/routes/user.route");
 
-  res.json(a);
-})
+const port = 3000;
 
-app.listen(3000);
+app.use(express.json());
+app.use("/user", userRoute);
+
+app.listen(port, () => console.log(`SERVER RUNNING ON ${port} PORT!`));
