@@ -12,7 +12,7 @@ const createNews = async (req, res) => {
             title,
             content,
             banner,
-            user: { _id: "642ac5fae9f862a8404ad179" },
+            user: req.userId,
         });
 
         res.status(201).send({ message: "Successfully article publish" })
