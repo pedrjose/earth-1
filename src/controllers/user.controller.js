@@ -38,7 +38,7 @@ const findAllUsers = async (req, res) => {
         }
 
         res.send(users);
-    } catch {
+    } catch (err) {
         res.status(500).send({ message: err.message });
     }
 }
@@ -48,7 +48,7 @@ const findUserById = async (req, res) => {
         const user = req.user;
 
         res.send(user);
-    } catch {
+    } catch (err) {
         res.status(500).send({ message: err.message });
     }
 }
@@ -73,7 +73,7 @@ const update = async (req, res) => {
         );
 
         res.send({ message: "User successfully updated" });
-    } catch {
+    } catch (err) {
         res.status(500).send({ message: err.message });
     }
 

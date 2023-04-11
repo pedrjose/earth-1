@@ -10,7 +10,7 @@ export const validId = (req, res, next) => {
         }
 
         next();
-    } catch {
+    } catch (err) {
         res.status(500).send({ message: err.message });
     }
 }
@@ -29,7 +29,7 @@ export const validUser = async (req, res, next) => {
         req.user = user;
 
         next();
-    } catch {
+    } catch (err) {
         res.status(500).send({ message: err.message });
     }
 }

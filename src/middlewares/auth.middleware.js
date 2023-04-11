@@ -40,7 +40,7 @@ const authMiddleware = (req, res, next) => {
             return next();
         })
     }
-    catch {
+    catch (err) {
         res.status(500).send(err.message);
     }
 }
