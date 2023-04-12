@@ -1,6 +1,6 @@
 import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService } from "../services/news.service.js";
 
-const createNews = async (req, res) => {
+export const createNews = async (req, res) => {
     try {
         const { title, content, banner } = req.body;
 
@@ -21,7 +21,7 @@ const createNews = async (req, res) => {
     }
 };
 
-const findAllNews = async (req, res) => {
+export const findAllNews = async (req, res) => {
     try {
         let { limit, offset } = req.query;
 
@@ -74,7 +74,7 @@ const findAllNews = async (req, res) => {
 
 }
 
-const findTrendNews = async (req, res) => {
+export const findTrendNews = async (req, res) => {
     try {
         const trendNews = await findTrendNewsService();
 
@@ -95,7 +95,7 @@ const findTrendNews = async (req, res) => {
     }
 }
 
-const findNewsById = async (req, res) => {
+export const findNewsById = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -117,5 +117,3 @@ const findNewsById = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 }
-
-export { createNews, findAllNews, findTrendNews, findNewsById };

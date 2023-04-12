@@ -4,7 +4,7 @@ import donetv from "dotenv";
 
 donetv.config();
 
-const authMiddleware = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
     try {
         const { authorization } = req.headers;
 
@@ -44,5 +44,3 @@ const authMiddleware = (req, res, next) => {
         res.status(500).send(err.message);
     }
 }
-
-export { authMiddleware };
