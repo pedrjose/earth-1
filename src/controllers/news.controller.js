@@ -1,4 +1,5 @@
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService } from "../services/news.service.js";
+import { query } from "express";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -112,6 +113,33 @@ export const findNewsById = async (req, res) => {
                 name: fetchedNews.user.name,
                 icon: fetchedNews.user.avatar,
             }
+        })
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const findNewsByTitle = async (req, res) => {
+    try {
+        const { title } = req.query;
+
+        const news = await findNewsByTitleService(title);
+
+        if (news.length === 0) {
+            return res.status(400).send({ message: "There are no articles with this title!" });
+        }
+
+        return res.send({
+            results: news.map((item) => ({
+                id: item._id,
+                title: item.title,
+                content: item.content,
+                banner: item.banner,
+                likes: item.likes,
+                comments: item.comments,
+                name: item.user.name,
+                icon: item.user.avatar,
+            }))
         })
     } catch (err) {
         res.status(500).send({ message: err.message });
