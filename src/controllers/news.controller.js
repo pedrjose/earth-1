@@ -1,4 +1,4 @@
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService } from "../services/news.service.js";
 
 const createNews = async (req, res) => {
     try {
@@ -95,4 +95,27 @@ const findTrendNews = async (req, res) => {
     }
 }
 
-export { createNews, findAllNews, findTrendNews };
+const findNewsById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const fetchedNews = await findNewsByIdService(id);
+
+        res.send({
+            returnedNews: {
+                id: fetchedNews._id,
+                title: fetchedNews.title,
+                content: fetchedNews.content,
+                banner: fetchedNews.banner,
+                likes: fetchedNews.likes,
+                comments: fetchedNews.comments,
+                name: fetchedNews.user.name,
+                icon: fetchedNews.user.avatar,
+            }
+        })
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export { createNews, findAllNews, findTrendNews, findNewsById };
