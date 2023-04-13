@@ -1,5 +1,5 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -141,6 +141,30 @@ export const findNewsByTitle = async (req, res) => {
                 icon: item.user.avatar,
             }))
         })
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const findNewsByUser = async (req, res) => {
+    try {
+        const id = req.userId;
+
+        const userNews = await findNewsByUserService(id);
+
+        return res.send({
+            results: userNews.map((item) => ({
+                id: item._id,
+                title: item.title,
+                content: item.content,
+                banner: item.banner,
+                likes: item.likes,
+                comments: item.comments,
+                name: item.user.name,
+                icon: item.user.avatar,
+            }))
+        })
+
     } catch (err) {
         res.status(500).send({ message: err.message });
     }

@@ -11,3 +11,5 @@ export const findTrendNewsService = () => News.findOne().sort({ _id: -1 }).popul
 export const findNewsByIdService = (id) => News.findById(id).populate("user");
 
 export const findNewsByTitleService = (title) => News.find({ title: { $regex: `${title || ""}`, $options: "i" }, }).sort({ _id: -1 }).populate("user");
+
+export const findNewsByUserService = (id) => News.find({ user: id }).sort({ _id: -1 }).populate("user");
