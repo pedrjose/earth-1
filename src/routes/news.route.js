@@ -8,6 +8,6 @@ router.post("/create-news", authMiddleware, createNews);
 router.get("/find-all-news", findAllNews);
 router.get("/trend-news", findTrendNews);
 router.get("/search", findNewsByTitle);
-router.get("/:id", findNewsById);
+router.get("/:id", authMiddleware, findNewsById);
 
 export default router;
