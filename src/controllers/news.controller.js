@@ -1,12 +1,12 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
         const { title, content, banner } = req.body;
 
         if (!title || !content || !banner) {
-            res.status(400).send({ message: "Submit all fields of article" })
+            res.status(400).send({ message: "Submit all fields of article" });
         }
 
         await createNewsService({
@@ -16,7 +16,7 @@ export const createNews = async (req, res) => {
             user: req.userId,
         });
 
-        res.status(201).send({ message: "Successfully article publish" })
+        res.status(201).send({ message: "Successfully article publish" });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
@@ -165,6 +165,25 @@ export const findNewsByUser = async (req, res) => {
             }))
         })
 
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const updateNews = async (req, res) => {
+    try {
+        const { title, content, banner } = req.body;
+        const { id } = req.params;
+
+        const news = await findNewsByIdService(id);
+
+        if (news.user._id != req.userId) {
+            return res.status(400).send({ message: "You're not the author of this article" });
+        }
+
+        await updateNewsService(id, title, content, banner);
+
+        res.status(201).send({ message: "Your article was updated successfully" })
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
