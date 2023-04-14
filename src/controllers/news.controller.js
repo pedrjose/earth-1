@@ -1,5 +1,5 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -184,6 +184,25 @@ export const updateNews = async (req, res) => {
         await updateNewsService(id, title, content, banner);
 
         res.status(201).send({ message: "Your article was updated successfully" })
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const deleteNews = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const news = await findNewsByIdService(id);
+
+        if (news.user._id != req.userId) {
+            return res.status(400).send({ message: "You're not the author of this article" });
+        }
+        
+        await deleteNewsService(id);
+
+        return res.send({ message: "Your article was deleted with sucess" });
+
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
