@@ -1,5 +1,5 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService, likedNewsService, deleteLikeService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -198,10 +198,29 @@ export const deleteNews = async (req, res) => {
         if (news.user._id != req.userId) {
             return res.status(400).send({ message: "You're not the author of this article" });
         }
-        
+
         await deleteNewsService(id);
 
         return res.send({ message: "Your article was deleted with sucess" });
+
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const likeNews = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const likedBy = req.userId;
+
+        const likedNews = await likedNewsService(id, likedBy);
+
+        if (!likedNews) {
+            await deleteLikeService(id, likedBy);
+            return res.status(200).send({ message: "Like removed" });
+        }
+
+        res.send({ message: "Article liked" });
 
     } catch (err) {
         res.status(500).send({ message: err.message });
