@@ -229,14 +229,15 @@ export const likeNews = async (req, res) => {
 
 export const addComment = async (req, res) => {
     try {
-        const { id } = req.params;
-        const userId = req.userId;
         const { comment } = req.body;
 
         if (!comment) {
-            return res.status(400).send({ message: "Write a message to comment" });
+            return res.status(400).send({ message: "You can't send a empty comment" });
         }
 
+        const { id } = req.params;
+
+        const userId = req.userId;
         const idComment = Math.floor(Date.now() * Math.random()).toString(36);
         const createdAt = new Date();
 
