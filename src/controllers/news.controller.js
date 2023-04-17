@@ -1,5 +1,5 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService, likedNewsService, deleteLikeService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService, likedNewsService, deleteLikeService, addCommentService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -226,3 +226,30 @@ export const likeNews = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 }
+
+export const addComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.userId;
+        const { comment } = req.body;
+
+        if (!comment) {
+            return res.status(400).send({ message: "Write a message to comment" });
+        }
+
+        const idComment = Math.floor(Date.now() * Math.random()).toString(36);
+        const createdAt = new Date();
+
+        const userComment = { idComment, userId, comment, createdAt }
+
+        console.log(userComment);
+
+        await addCommentService(id, userComment);
+
+        res.send({
+            message: "Comment successfully completed!",
+        });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
