@@ -243,8 +243,6 @@ export const addComment = async (req, res) => {
 
         const userComment = { idComment, userId, comment, createdAt }
 
-        console.log(userComment);
-
         await addCommentService(id, userComment);
 
         res.send({
