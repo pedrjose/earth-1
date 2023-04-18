@@ -1,5 +1,5 @@
 import { query } from "express";
-import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService, likedNewsService, deleteLikeService, addCommentService } from "../services/news.service.js";
+import { createNewsService, findAllNewsService, countNewsService, findTrendNewsService, findNewsByIdService, findNewsByTitleService, findNewsByUserService, updateNewsService, deleteNewsService, likedNewsService, deleteLikeService, addCommentService, deleteCommentService } from "../services/news.service.js";
 
 export const createNews = async (req, res) => {
     try {
@@ -241,9 +241,7 @@ export const addComment = async (req, res) => {
         const idComment = Math.floor(Date.now() * Math.random()).toString(36);
         const createdAt = new Date();
 
-        const userComment = { idComment, userId, comment, createdAt }
-
-        await addCommentService(id, userComment);
+        await addCommentService(id, idComment, userId, comment, createdAt);
 
         res.send({
             message: "Comment successfully completed!",
@@ -252,3 +250,34 @@ export const addComment = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
+export const removeComment = async (req, res) => {
+    try {
+        const { idNews, idComment } = req.params;
+        const userId = req.userId;
+
+        const commentFilter = await findNewsByIdService(idNews);
+
+        let deletedComment;
+
+        for (let i = 0; i < commentFilter.comments.length; i++) {
+            if (commentFilter.comments[i].idComment === idComment) {
+                deletedComment = commentFilter.comments[i];
+            }
+        }
+
+        if (!deletedComment) {
+            return res.status(400).send({ message: "Comment not found" });
+        }
+
+        if (deletedComment.userId !== userId) {
+            return res.status(400).send({ message: "You're not the author of this comment" })
+        }
+
+        await deleteCommentService(idNews, idComment, userId);
+
+        res.send({ message: "Comment deleted with success" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
