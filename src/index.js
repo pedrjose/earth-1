@@ -1,4 +1,4 @@
-import cors from "cors";
+// import cors from "cors";
 import express from "express";
 import connectDatabase from "./database/db.js";
 import dotenv from "dotenv";
@@ -14,9 +14,14 @@ const app = express();
 
 connectDatabase();
 
-app.use(cors({
-    origin: "https://api-earth1.onrender.com"
-}));
+/* 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+*/
+
 app.use(express.json());
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
