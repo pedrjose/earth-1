@@ -15,7 +15,7 @@ const app = express();
 connectDatabase();
 
 app.use(cors({
-    origin: ["https://api-earth1.onrender.com", "http://localhost:3000"]
+    origin: "https://api-earth1.onrender.com"
 }));
 app.use(express.json());
 app.use("/user", userRoute);
