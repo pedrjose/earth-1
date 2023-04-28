@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from "express";
 import connectDatabase from "./database/db.js";
 import dotenv from "dotenv";
@@ -13,6 +14,10 @@ const app = express();
 
 connectDatabase();
 
+app.use(cors({
+    origin: ['https://api-earth1.onrender.com/', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH']
+}))
 app.use(express.json());
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
