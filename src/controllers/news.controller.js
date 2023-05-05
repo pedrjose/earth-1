@@ -42,10 +42,10 @@ export const findAllNews = async (req, res) => {
         const routeUrlBase = req.baseUrl;
 
         const next = offset + limit;
-        const nextUrl = next < newsCounter ? `${routeUrlBase}?limit=${limit}&offset=${next}` : null;
+        const nextUrl = next < newsCounter ? `${routeUrlBase}/find-all-news?limit=${limit}&offset=${next}` : null;
 
         const previous = offset - limit > 0 ? null : offset - limit;
-        const previousUrl = previous !== null ? `${routeUrlBase}?limit=${limit}&offset=${previous}` : null;
+        const previousUrl = previous !== null ? `${routeUrlBase}/find-all-news?limit=${limit}&offset=${previous}` : null;
 
         if (news.length === 0) {
             return res.status(400).send({ message: "There's not registred articles" });
