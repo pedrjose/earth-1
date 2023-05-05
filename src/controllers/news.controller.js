@@ -32,6 +32,9 @@ export const findAllNews = async (req, res) => {
         if (!limit) {
             limit = 5;
         }
+        else {
+            limit = 4;
+        }
 
         if (!offset) {
             offset = 0;
