@@ -30,10 +30,10 @@ export const findAllNews = async (req, res) => {
         offset = Number(offset);
 
         if (!limit) {
-            limit = 5;
+            limit = 0;
         }
         else {
-            limit = 4;
+            limit = 0;
         }
 
         if (!offset) {
