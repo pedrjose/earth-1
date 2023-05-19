@@ -1,13 +1,13 @@
 import { createUserRepository, findAllRepository, findByIdRepository, updateRepository } from "../Repositories/user.repositories.js"
 
 export const createUserService = async ({ name, username, password, avatar, background }) => {
-    if (!name || !username || !password || !avatar || !background) throw new Error({ message: "Submit all fields for registragion" })
+    if (!name || !username || !password || !avatar || !background) throw new Error("Submit all fields for registragion")
 
     const user = { name, username, password, avatar, background };
 
     const newUser = await createUserRepository(user);
 
-    if (!newUser) throw new Error({ message: "Error Creating User" });
+    if (!newUser) throw new Error("Error Creating User");
 
     return {
         message: "User created sucessfully",
@@ -21,18 +21,12 @@ export const createUserService = async ({ name, username, password, avatar, back
     };
 }
 
-export const findAllUsers = async (req, res) => {
-    try {
-        const users = await userService.findAllService();
+export const findAllUsersService = async () => {
+    const users = await findAllRepository();
 
-        if (users.length === 0) {
-            return res.status(400).send({ message: "There's not users registered" });
-        }
+    if (users.length === 0) throw new Error({ message: "There's not users registered" })
 
-        res.send(users);
-    } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
+    return users;
 }
 
 export const findUserById = async (req, res) => {

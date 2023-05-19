@@ -1,4 +1,4 @@
-import { createUserService } from '../services/user.service.js';
+import { createUserService, findAllUsersService } from '../services/user.service.js';
 
 export const createUserController = async (req, res) => {
     const { name, username, password, avatar, background } = req.body;
@@ -21,13 +21,9 @@ export const createUserController = async (req, res) => {
     }
 }
 
-export const findAllUsers = async (req, res) => {
+export const findAllUsersController = async (req, res) => {
     try {
-        const users = await userService.findAllService();
-
-        if (users.length === 0) {
-            return res.status(400).send({ message: "There's not users registered" });
-        }
+        const users = await findAllUsersService();
 
         res.send(users);
     } catch (err) {
