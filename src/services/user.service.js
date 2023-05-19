@@ -37,28 +37,19 @@ export const findUserByIdService = async (userId) => {
     return user;
 }
 
-export const update = async (req, res) => {
-    try {
-        const { name, username, password, avatar, background } = req.body;
+export const updateUserService = async (userId, userData) => {
+    const { name, username, password, avatar, background } = userData;
+    
+    if (!name && !username && !password && !avatar && !background) throw new Error("Submit at least one field for update")
 
-        if (!name && !username && !password && !avatar && !background) {
-            res.status(400).send({ message: "Submit at least one field for update" });
-        }
+    await updateRepository(
+        userId,
+        name,
+        username,
+        password,
+        avatar,
+        background
+    );
 
-        const { id, user } = req;
-
-        await userService.updateService(
-            id,
-            name,
-            username,
-            password,
-            avatar,
-            background
-        );
-
-        res.send({ message: "User successfully updated" });
-    } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
-
+    return { message: "User successfully updated" };
 }

@@ -1,4 +1,4 @@
-import { createUserService, findAllUsersService, findUserByIdService } from '../services/user.service.js';
+import { createUserService, findAllUsersService, findUserByIdService, updateUserService } from '../services/user.service.js';
 
 export const createUserController = async (req, res) => {
     const { name, username, password, avatar, background } = req.body;
@@ -41,26 +41,19 @@ export const findUserByIdController = async (req, res) => {
     }
 }
 
-export const update = async (req, res) => {
+export const updateController = async (req, res) => {
     try {
+        const { id } = req;
         const { name, username, password, avatar, background } = req.body;
 
-        if (!name && !username && !password && !avatar && !background) {
-            res.status(400).send({ message: "Submit at least one field for update" });
-        }
+        const user = { name, username, password, avatar, background };
 
-        const { id, user } = req;
-
-        await userService.updateService(
+        const updateUser = await updateUserService(
             id,
-            name,
-            username,
-            password,
-            avatar,
-            background
+            user
         );
 
-        res.send({ message: "User successfully updated" });
+        res.send(updateUser);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
