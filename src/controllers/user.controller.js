@@ -1,18 +1,10 @@
-import userService from '../services/user.service.js';
+import { createUserService } from '../services/user.service.js';
 
-export const create = async (req, res) => {
+export const createUserController = async (req, res) => {
+    const { name, username, password, avatar, background } = req.body;
+
     try {
-        const { name, username, password, avatar, background } = req.body;
-
-        if (!name || !username || !password || !avatar || !background) {
-            res.status(400).send({ message: "Submit all fields for registragion" });
-        }
-
-        const user = await userService.createService(req.body);
-
-        if (!user) {
-            return res.status(400).send({ message: "Error Creating User" });
-        }
+        const user = await createUserService(req.body);
 
         res.status(201).send({
             message: "User created sucessfully",

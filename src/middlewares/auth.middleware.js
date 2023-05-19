@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import userService from "../services/user.service.js";
+import { findByIdRepository } from "../Repositories/user.repositories.js";
 import donetv from "dotenv";
 
 donetv.config();
@@ -29,7 +29,7 @@ export const authMiddleware = (req, res, next) => {
                 return res.status(401).send({ message: "Token invalid!" });
             }
 
-            const user = await userService.findByIdService(decoded.id);
+            const user = await findByIdRepository(decoded.id);
 
             if (!user || !user.id) {
                 return res.status(401).send({ message: "Invalid User!" });

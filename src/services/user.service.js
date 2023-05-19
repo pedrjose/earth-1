@@ -1,26 +1,72 @@
-import User from "../models/User.js";
+import { createUserRepository, findAllRepository, findByIdRepository, updateRepository } from "../Repositories/user.repositories.js"
 
-const createService = (body) => User.create(body);
+export const createUserService = async ({ name, username, password, avatar, background }) => {
+    if (!name || !username || !password || !avatar || !background) throw new Error({ message: "Submit all fields for registragion" })
 
-const findAllService = () => User.find();
+    const user = { name, username, password, avatar, background };
 
-const findByIdService = (id) => User.findById(id);
+    const newUser = await createUserRepository(user);
 
-const updateService = (
-    id,
-    name,
-    username,
-    password,
-    avatar,
-    background
-) => User.findOneAndUpdate(
-    { _id: id },
-    { name, username, password, avatar, background }
-);
+    if (!newUser) throw new Error({ message: "Error Creating User" });
 
-export default {
-    createService,
-    findAllService,
-    findByIdService,
-    updateService
-};
+    return {
+        message: "User created sucessfully",
+        user: {
+            id: user._id,
+            name,
+            username,
+            avatar,
+            background
+        }
+    };
+}
+
+export const findAllUsers = async (req, res) => {
+    try {
+        const users = await userService.findAllService();
+
+        if (users.length === 0) {
+            return res.status(400).send({ message: "There's not users registered" });
+        }
+
+        res.send(users);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const findUserById = async (req, res) => {
+    try {
+        const user = req.user;
+
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+}
+
+export const update = async (req, res) => {
+    try {
+        const { name, username, password, avatar, background } = req.body;
+
+        if (!name && !username && !password && !avatar && !background) {
+            res.status(400).send({ message: "Submit at least one field for update" });
+        }
+
+        const { id, user } = req;
+
+        await userService.updateService(
+            id,
+            name,
+            username,
+            password,
+            avatar,
+            background
+        );
+
+        res.send({ message: "User successfully updated" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+
+}
