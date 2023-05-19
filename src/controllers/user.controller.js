@@ -1,4 +1,4 @@
-import { createUserService, findAllUsersService } from '../services/user.service.js';
+import { createUserService, findAllUsersService, findUserByIdService } from '../services/user.service.js';
 
 export const createUserController = async (req, res) => {
     const { name, username, password, avatar, background } = req.body;
@@ -31,9 +31,9 @@ export const findAllUsersController = async (req, res) => {
     }
 }
 
-export const findUserById = async (req, res) => {
+export const findUserByIdController = async (req, res) => {
     try {
-        const user = req.user;
+        const user = await findUserByIdService(req.user);
 
         res.send(user);
     } catch (err) {

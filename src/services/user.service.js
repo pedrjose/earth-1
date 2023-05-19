@@ -29,14 +29,12 @@ export const findAllUsersService = async () => {
     return users;
 }
 
-export const findUserById = async (req, res) => {
-    try {
-        const user = req.user;
+export const findUserByIdService = async (userId) => {
+    const user = await findByIdRepository(userId);
 
-        res.send(user);
-    } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
+    if (!user) throw new Error("User not found. Check the ID!");
+
+    return user;
 }
 
 export const update = async (req, res) => {
