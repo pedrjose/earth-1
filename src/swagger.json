@@ -480,7 +480,7 @@
                 }
             }
         },
-        "/news/{id}": {
+        "/news/update/{id}": {
             "patch": {
                 "summary": "Update a Article",
                 "description": "Route responsible for updating a News",
@@ -540,7 +540,7 @@
                 }
             }
         },
-        "/news/{id}": {
+        "/news/delete/{id}": {
             "delete": {
                 "summary": "Delete a News",
                 "description": "Route responsible for deleting a News",

@@ -1,46 +1,171 @@
-import News from "../models/News.js";
+import { createNewsRepository, findAllNewsRepository, countNewsRepository, findTrendNewsRepository, findNewsByIdRepository, findNewsByTitleRepository, findNewsByUserRepository, updateNewsRepository, deleteNewsRepository, likedNewsRepository, deleteLikeRepository, addCommentRepository, deleteCommentRepository } from "../Repositories/news.repositories.js";
 
-export const createNewsService = (body) => News.create(body);
+export const createNewsService = async (title, content, banner, creatorId) => {
+    if (!title || !content || !banner) throw new Error("Submit all fields of article");
 
-export const findAllNewsService = (offset, limit) => News.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
+    const returnedNews = await createNewsRepository({ title, content, banner, user: creatorId });
 
-export const countNewsService = () => News.countDocuments();
+    if (!returnedNews) throw new Error("Submit article failed. Try again!")
 
-export const findTrendNewsService = () => News.findOne().sort({ _id: -1 }).populate("user");
+    return { message: "Article created successfully" }
+}
 
-export const findNewsByIdService = (id) => News.findById(id).populate("user");
+export const findAllNewsService = async () => {
+    const limit = 0;
+    const offset = 0;
 
-export const findNewsByTitleService = (title) => News.find({ title: { $regex: `${title || ""}`, $options: "i" }, }).sort({ _id: -1 }).populate("user");
+    const news = await findAllNewsRepository(offset, limit);
 
-export const findNewsByUserService = (id) => News.find({ user: id }).sort({ _id: -1 }).populate("user");
+    if (news.length === 0) throw new Error("There's not registred articles");
 
-export const updateNewsService = (id, title, content, banner) =>
-    News.findOneAndUpdate(
-        { _id: id },
-        { title, content, banner },
-        {
-            rawResult: true,
-        }
-    );
+    return ({
+        newsCounter: news.length,
 
-export const deleteNewsService = (id) => News.findOneAndDelete({ _id: id });
-
-export const likedNewsService = (id, likedBy) => News.findOneAndUpdate(
-    { _id: id, "likes.likedBy": { $nin: [likedBy] } },
-    { $push: { likes: { likedBy, created: new Date() } } }
-);
-
-export const deleteLikeService = (id, likedBy) =>
-    News.findByIdAndUpdate({ _id: id }, { $pull: { likes: { likedBy } } });
-
-export const addCommentService = (idNews, idComment, userId, comment, createdAt) =>
-    News.findOneAndUpdate({ _id: idNews }, {
-        $push:
-        {
-            comments:
-                { idComment, userId, comment, createdAt },
-        },
+        results: news.map((item) => ({
+            id: item._id,
+            title: item.title,
+            content: item.content,
+            banner: item.banner,
+            likes: item.likes,
+            comments: item.comments,
+            name: item.user.name,
+            icon: item.user.avatar,
+        })),
     });
+}
 
-export const deleteCommentService = (idNews, idComment, userId) =>
-    News.findOneAndUpdate({ _id: idNews }, { $pull: { comments: { idComment, userId } } });
+export const findTrendNewsService = async () => {
+    const searchTrendNews = await findTrendNewsRepository();
+
+    if (!searchTrendNews) throw new Error("There's no trending news");
+
+    return ({
+        id: searchTrendNews._id,
+        title: searchTrendNews.title,
+        content: searchTrendNews.content,
+        banner: searchTrendNews.banner,
+        likes: searchTrendNews.likes,
+        comments: searchTrendNews.comments,
+        name: searchTrendNews.user.name,
+        icon: searchTrendNews.user.avatar,
+    })
+}
+
+export const findNewsByIdService = async (id) => {
+    const searchNews = await findNewsByIdRepository(id);
+
+    if (!searchNews) throw new Error("Article not found!");
+
+    return {
+        id: searchNews._id,
+        title: searchNews.title,
+        content: searchNews.content,
+        banner: searchNews.banner,
+        likes: searchNews.likes,
+        comments: searchNews.comments,
+        authorId: searchNews.user._id,
+        name: searchNews.user.name,
+        icon: searchNews.user.avatar
+    }
+}
+
+export const findNewsByTitleService = async (title) => {
+    const news = await findNewsByTitleRepository(title);
+
+    if (news.length === 0) throw new Error("There are no articles with this title!");
+
+    const results = news.map((item) => ({
+        id: item._id,
+        title: item.title,
+        content: item.content,
+        banner: item.banner,
+        likes: item.likes,
+        comments: item.comments,
+        name: item.user.name,
+        icon: item.user.avatar,
+    }));
+
+    return results;
+}
+
+export const findNewsByUserService = async (id) => {
+    const news = await findNewsByUserRepository(id);
+
+    if (news === 0) throw new Error("User has no articles into platform");
+
+    const results = news.map((item) => ({
+        id: item._id,
+        title: item.title,
+        content: item.content,
+        banner: item.banner,
+        likes: item.likes,
+        comments: item.comments,
+        name: item.user.name,
+        icon: item.user.avatar,
+    }));
+
+    return results;
+}
+
+export const updateNewsService = async (id, authorId, title, content, banner) => {
+    if (!title && !content && !banner) throw new Error("Submit at least one field to update");
+
+    const news = await findNewsByIdRepository(id);
+
+    if (news.user._id != authorId) throw new Error("You're not the author of this article!");
+
+    await updateNewsRepository(id, title, content, banner);
+
+    return { message: "Your article was updated successfully" };
+}
+
+export const deleteNewsService = async (id, authorId) => {
+    const news = await findNewsByIdRepository(id);
+
+    if (news.user._id != authorId) throw new Error("You're not the author of this article!");
+
+    await deleteNewsRepository(id);
+
+    return { message: "Your article was deleted successfully" };
+}
+
+export const likeNewsService = async (id, likedBy) => {
+    const likedNews = await likedNewsRepository(id, likedBy);
+
+    if (!likedNews) {
+        await deleteLikeRepository(id, likedBy);
+        return { message: "Like removed" };
+    }
+
+    return { message: "News liked" };
+}
+
+export const addCommentService = async (id, userId, comment) => {
+    if (!comment) throw new Error("You can't send a empty comment");
+
+    const idComment = Math.floor(Date.now() * Math.random()).toString(36);
+    const createdAt = new Date();
+
+    await addCommentRepository(id, idComment, userId, comment, createdAt);
+
+    return { message: "Comment successfully completed!" };
+}
+
+export const removeCommentService = async (idNews, idComment, userId) => {
+    const commentFilter = await findNewsByIdRepository(idNews);
+    let deletedComment;
+
+    for (let i = 0; i < commentFilter.comments.length; i++) {
+        if (commentFilter.comments[i].idComment === idComment) {
+            deletedComment = commentFilter.comments[i];
+        }
+    }
+
+    if (!deletedComment) throw new Error("Comment not found");
+
+    if (deletedComment.userId !== userId) throw new Error("You're not the author of this comment");
+
+    await deleteCommentRepository(idNews, idComment, userId);
+
+    return { message: "Comment deleted with success" };
+}
