@@ -4,11 +4,12 @@ const router = Router();
 import { createNewsController, findAllNewsController, findTrendNewsController, findNewsByIdController, findNewsByTitleController, findNewsByUserController, updateNewsController, deleteNewsController, likeNewsController, addCommentController, removeCommentController } from "../controllers/news.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { updateFormValidation } from "../middlewares/global.middleware.js";
+import { corsAuth } from "../middlewares/cors.middleware.js";
 
 router.post("/create-news", authMiddleware, createNewsController);
 router.get("/find-all-news", findAllNewsController);
 router.get("/trend-news", findTrendNewsController);
-router.get("/search", findNewsByTitleController);
+router.get("/search", corsAuth, findNewsByTitleController);
 router.get("/by-user", authMiddleware, findNewsByUserController);
 router.get("/find-news/:id", authMiddleware, findNewsByIdController);
 router.patch("/update/:id", authMiddleware, updateFormValidation, updateNewsController);
