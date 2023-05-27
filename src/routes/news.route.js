@@ -11,7 +11,7 @@ router.get("/find-all-news", findAllNewsController);
 router.get("/trend-news", findTrendNewsController);
 router.get("/search", findNewsByTitleController);
 router.get("/by-user", authMiddleware, findNewsByUserController);
-router.get("/find-news/:id", authMiddleware, findNewsByIdController);
+router.get("/find-news/:id", findNewsByIdController);
 router.patch("/update/:id", authMiddleware, updateFormValidation, updateNewsController);
 router.delete("/delete/:id", authMiddleware, deleteNewsController);
 router.patch("/like/:id", authMiddleware, likeNewsController);
