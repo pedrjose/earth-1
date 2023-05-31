@@ -18,12 +18,9 @@ export const login = async (req, res) => {
         }
 
         const token = generateToken(user.id);
-        const authorization = 'Bearer ' + token;
-
         const loggedUser = user.id;
 
-        res.header(authorization);
-        res.send({ loggedUser });
+        res.send({ token, loggedUser });
 
     } catch (err) {
         res.status(500).send(err.message);
