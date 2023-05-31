@@ -18,8 +18,12 @@ export const login = async (req, res) => {
         }
 
         const token = generateToken(user.id);
+        const authorization = 'Bearer ' + token;
 
-        res.send({ token });
+        const loggedUser = user.id;
+
+        res.header(authorization);
+        res.send({ loggedUser });
 
     } catch (err) {
         res.status(500).send(err.message);

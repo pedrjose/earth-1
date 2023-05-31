@@ -33,12 +33,12 @@ export const likedNewsRepository = (id, likedBy) => News.findOneAndUpdate(
 export const deleteLikeRepository = (id, likedBy) =>
     News.findByIdAndUpdate({ _id: id }, { $pull: { likes: { likedBy } } });
 
-export const addCommentRepository = (idNews, idComment, userId, comment, createdAt) =>
+export const addCommentRepository = (idNews, userId, idComment, comment, photo, userName, createdAt) =>
     News.findOneAndUpdate({ _id: idNews }, {
         $push:
         {
             comments:
-                { idComment, userId, comment, createdAt },
+                { userId, idComment, userId, comment, photo, userName, createdAt },
         },
     });
 

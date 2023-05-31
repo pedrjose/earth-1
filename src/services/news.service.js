@@ -1,4 +1,5 @@
 import { createNewsRepository, findAllNewsRepository, countNewsRepository, findTrendNewsRepository, findNewsByIdRepository, findNewsByTitleRepository, findNewsByUserRepository, updateNewsRepository, deleteNewsRepository, likedNewsRepository, deleteLikeRepository, addCommentRepository, deleteCommentRepository } from "../Repositories/news.repositories.js";
+import { findByIdRepository } from "../Repositories/user.repositories.js";
 
 export const createNewsService = async (title, content, banner, creatorId) => {
     if (!title || !content || !banner) throw new Error("Submit all fields of article");
@@ -143,10 +144,15 @@ export const likeNewsService = async (id, likedBy) => {
 export const addCommentService = async (id, userId, comment) => {
     if (!comment) throw new Error("You can't send a empty comment");
 
+    const userCommenting = await findByIdRepository(userId);
+
+    const photo = userCommenting.avatar;
+    const userName = userCommenting.name;
+    
     const idComment = Math.floor(Date.now() * Math.random()).toString(36);
     const createdAt = new Date();
 
-    await addCommentRepository(id, idComment, userId, comment, createdAt);
+    await addCommentRepository(id, userId, idComment, comment, photo, userName, createdAt);
 
     return { message: "Comment successfully completed!" };
 }
