@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { loginService, generateToken } from "../services/auth.service.js";
+import donetv from "dotenv";
 
 export const login = async (req, res) => {
     const { username, password } = req.body;
