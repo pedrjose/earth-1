@@ -10,7 +10,7 @@ export const createUserService = async ({ name, username, password, avatar, back
     if (!newUser) throw new Error("Error Creating User");
 
     return {
-        message: "User created sucessfully",
+        message: "User created sucessfully. Log in!",
         user: {
             id: user._id,
             name,
