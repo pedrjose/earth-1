@@ -135,10 +135,10 @@ export const likeNewsService = async (id, likedBy) => {
 
     if (!likedNews) {
         await deleteLikeRepository(id, likedBy);
-        return { message: "Like removed" };
+        return { message: "Like removed!" };
     }
 
-    return { message: "News liked" };
+    return { message: "Article liked!" };
 }
 
 export const addCommentService = async (id, userId, comment) => {
