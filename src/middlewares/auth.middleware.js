@@ -7,13 +7,12 @@ donetv.config();
 export const authMiddleware = (req, res, next) => {
     try {
         const { authorization } = req.headers;
-        const authSecret = authorization;
 
-        if (!authSecret) {
+        if (!authorization) {
             return res.status(401).send({ message: "Authentication 1 fail!" });
         }
 
-        const tokenDivider = authSecret.split(" ");
+        const tokenDivider = authorization.split(" ");
 
         if (tokenDivider.length !== 2) {
             return res.status(401).send({ message: "Authentication 2 fail!" });
