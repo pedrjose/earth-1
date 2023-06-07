@@ -1,7 +1,7 @@
 import { createUserRepository, findAllRepository, findByIdRepository, updateRepository } from "../Repositories/user.repositories.js"
 
 export const createUserService = async ({ name, username, password, avatar, background }) => {
-    if (!name || !username || !password || !avatar || !background) throw new Error("Submit all fields for registragion");
+    if (!name || !username || !password || !avatar || !background) throw new Error("Submit all fields for registration");
 
     const user = { name, username, password, avatar, background };
 
