@@ -105,10 +105,9 @@ export const likeNewsController = async (req, res) => {
         const { id } = req.params;
         const likedBy = req.userId;
 
-        const liked = await likeNewsService(id, likedBy)
+        const liked = await likeNewsService(id, likedBy);
 
         res.send(liked);
-
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
