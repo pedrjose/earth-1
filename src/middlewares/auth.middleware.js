@@ -9,19 +9,19 @@ export const authMiddleware = (req, res, next) => {
         const { authorization } = req.headers;
 
         if (!authorization) {
-            return res.status(401).send({ message: "Authentication 1 fail!" });
+            return res.status(401).send({ message: "Authentication 1 fail!", authorization });
         }
 
         const tokenDivider = authorization.split(" ");
 
         if (tokenDivider.length !== 2) {
-            return res.status(401).send({ message: "Authentication 2 fail!" });
+            return res.status(401).send({ message: "Authentication 2 fail!", authorization });
         }
 
         const [schema, token] = tokenDivider;
 
         if (schema !== "Bearer") {
-            return res.status(401).send({ message: "Authentication 3 fail!" });
+            return res.status(401).send({ message: "Authentication 3 fail!", authorization });
         }
 
         jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
