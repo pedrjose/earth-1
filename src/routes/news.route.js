@@ -14,7 +14,7 @@ router.get("/by-user", authMiddleware, findNewsByUserController);
 router.get("/find-news/:id", findNewsByIdController);
 router.patch("/update/:id", authMiddleware, updateFormValidation, updateNewsController);
 router.delete("/delete/:id", authMiddleware, deleteNewsController);
-router.patch("/like/:id", authMiddleware, likeNewsController);
+router.patch("/like/:idNewsLiked", authMiddleware, likeNewsController);
 router.patch("/comment/:id", authMiddleware, addCommentController);
 router.patch("/comment/:idNews/:idComment", authMiddleware, removeCommentController);
 
