@@ -9,24 +9,24 @@ export const authMiddleware = (req, res, next) => {
         const { authorization } = req.headers;
 
         if (!authorization) {
-            return res.status(401).send({ message: "You need to be logged in to like the article!" });
+            return res.status(401).send({ message: "Be logged in to like the article!" });
         }
 
         const tokenDivider = authorization.split(" ");
 
         if (tokenDivider.length !== 2) {
-            return res.status(401).send({ message: "You don't have authorization to do this!" });
+            return res.status(401).send({ message: "Not authorization to do this!" });
         }
 
         const [schema, token] = tokenDivider;
 
         if (schema !== "Bearer") {
-            return res.status(401).send({ message: "You don't have authorization to do this!" });
+            return res.status(401).send({ message: "Not authorization to do this!" });
         }
 
         jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
             if (error) {
-                return res.status(401).send({ message: "Your session has expired. Please log in again!" });
+                return res.status(401).send({ message: "Session has expired. Log in again!" });
             }
 
             const user = await findByIdRepository(decoded.id);
