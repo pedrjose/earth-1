@@ -6,22 +6,22 @@ donetv.config();
 
 export const authMiddleware = (req, res, next) => {
     try {
-        const { authorization } = req.headers;
+        const authorization = req.headers;
 
         if (!authorization) {
-            return res.status(401).send({ message: "Authentication 1 fail!", token: authorization });
+            return res.status(401).send({ message: "Authentication 1 fail!" });
         }
 
         const tokenDivider = authorization.split(" ");
 
         if (tokenDivider.length !== 2) {
-            return res.status(401).send({ message: "Authentication 2 fail!", token: authorization });
+            return res.status(401).send({ message: "Authentication 2 fail!" });
         }
 
         const [schema, token] = tokenDivider;
 
         if (schema !== "Bearer") {
-            return res.status(401).send({ message: "Authentication 3 fail!", token: authorization });
+            return res.status(401).send({ message: "Authentication 3 fail!" });
         }
 
         jwt.verify(token, process.env.SECRET_JWT, async (error, decoded) => {
