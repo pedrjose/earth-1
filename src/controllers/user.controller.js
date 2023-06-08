@@ -8,7 +8,7 @@ export const createUserController = async (req, res) => {
 
         res.status(201).send(user);
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status(500).send({ message: 'Error. Try again!' });
     }
 }
 
