@@ -8,7 +8,7 @@ export const createUserController = async (req, res) => {
 
         res.status(201).send(user);
     } catch (err) {
-        res.status(500).send({ message: `It's not possible to register this profile. Please try again!` });
+        res.status(500).send({ message: `Cannot register this profile. Please try again!` });
     }
 }
 
