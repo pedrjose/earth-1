@@ -6,16 +6,7 @@ export const createUserController = async (req, res) => {
     try {
         const user = await createUserService(req.body);
 
-        res.status(201).send({
-            message: "User created sucessfully",
-            user: {
-                id: user._id,
-                name,
-                username,
-                avatar,
-                background
-            }
-        });
+        res.status(201).send(user);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
